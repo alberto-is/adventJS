@@ -198,3 +198,80 @@ function organizeInventory(inventory) {
   return result;
 }
 ```
+
+## Dia 4
+¡Es hora de poner el árbol de Navidad en casa! 🎄 Pero este año queremos que sea especial. Vamos a crear una función que recibe la altura del árbol (un entero positivo entre 1 y 100) y un carácter especial para decorarlo.
+
+La función debe devolver un string que represente el árbol de Navidad, construido de la siguiente manera:
+- El árbol está compuesto de triángulos de caracteres especiales.
+- Los espacios en blanco a los lados del árbol se representan con guiones bajos _.
+- Todos los árboles tienen un tronco de dos líneas, representado por el carácter #.
+- El árbol siempre debe tener la misma longitud por cada lado.
+- Debes asegurarte de que el árbol tenga la forma correcta usando saltos de línea \n para cada línea.
+
+```js
+const tree = createXmasTree(5, '*')
+console.log(tree)
+/*
+____*____
+___***___
+__*****__
+_*******_
+*********
+____#____
+____#____
+*/
+
+const tree2 = createXmasTree(3, '+')
+console.log(tree2)
+/*
+__+__
+_+++_
++++++
+__#__
+__#__
+*/
+
+const tree3 = createXmasTree(6, '@')
+console.log(tree3)
+/*
+_____@_____
+____@@@____
+___@@@@@___
+__@@@@@@@__
+_@@@@@@@@@_
+@@@@@@@@@@@
+_____#_____
+_____#_____
+*/
+```
+
+```js
+// 4 extrellas
+function createXmasTree(height, ornament) {
+  let border = '_'.repeat(height-1)
+  let tree = border + ornament + border +'\n'
+  for(let i = 0; i < height ;i++){
+    tree += '_'.repeat(height-1-i) + ornament.repeat(i)+ ornament + ornament.repeat(i)+ '_'.repeat(height-1-i) +'\n'
+  }
+
+  tree += `${border}#${border}\n`+`${border}#${border}`
+  return tree
+}
+```
+
+```js
+// 5 extrellas
+function createXmasTree(height, ornament) {
+  const border = '_'.repeat(height - 1);
+  const trunk = `${border}#${border}`;
+  let tree = [];
+
+  for (let i = 0; i < height; i++) {
+    const padding = '_'.repeat(height - 1 - i);
+    const layer = ornament.repeat(2 * i + 1);
+    tree.push(`${padding}${layer}${padding}`);
+  }
+
+  return tree.join('\n') + `\n${trunk}\n${trunk}`;
+```

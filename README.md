@@ -407,3 +407,136 @@ function inBox(box) {
   return false
 }
 ```
+
+## Día 7
+El grinch 👹 ha pasado por el taller de Santa Claus! Y menudo desastre ha montado. Ha cambiado el orden de algunos paquetes, por lo que los envíos no se pueden realizar.
+
+Por suerte, el elfo Pheralb ha detectado el patrón que ha seguido el grinch para desordenarlos. Nos ha escrito las reglas que debemos seguir para reordenar los paquetes. Las instrucciones que siguen son:
+
+Recibirás un string que contiene letras y paréntesis.
+Cada vez que encuentres un par de paréntesis, debes voltear el contenido dentro de ellos.
+Si hay paréntesis anidados, resuelve primero los más internos.
+Devuelve el string resultante con los paréntesis eliminados, pero con el contenido volteado correctamente.
+Nos ha dejado algunos ejemplos:
+
+```js
+fixPackages('a(cb)de')
+// ➞ "abcde"
+// Volteamos "cb" dentro de los paréntesis
+
+fixPackages('a(bc(def)g)h')
+// ➞ "agdefcbh"
+// 1º volteamos "def" → "fed", luego volteamos "bcfedg" → "gdefcb"
+
+fixPackages('abc(def(gh)i)jk')
+// ➞ "abcighfedjk"
+// 1º volteamos "gh" → "hg", luego "defhgi" → "ighfed"
+
+fixPackages('a(b(c))e')
+// ➞ "acbe"
+// 1º volteamos "c" → "c", luego "bc" → "cb"
+```
+
+```js 
+// 3 estrella :C
+function fixPackages(packages) {
+  function invertParentheses(str) {
+    const regex = /\(([^()]*)\)/;
+    
+    if (!regex.test(str)) {
+      return str;
+    }
+    return invertParentheses(str.replace(regex, (_, content) => {
+      return content.split('').reverse().join('');
+    }));
+  }
+  
+  return invertParentheses(packages).replace(/[()]/g, '');
+}
+```
+
+```js
+// 2 estrella :C
+function fixPackages(packages) {
+  let arr = []
+  for(let i = 0; i<packages.length ;i++){
+    let p = packages[i]
+    if ( p ==='('){
+      arr.push(i)
+    }
+    else if (p === ')'){
+      let begin = arr.pop()
+      packages = packages.slice(0,begin) + invest(packages.slice(begin,i+1))+ packages.slice(i+1)
+    }
+  }
+
+  return packages.replaceAll('(','').replaceAll(')','')
+
+  function invest(str){
+    return [...str].reverse().join('')
+  }
+}
+```
+
+```js
+// 4 estrellas :/
+function fixPackages(packages) {
+  let arr = []
+  for(let i = 0; i<packages.length ;i++){
+    let p = packages[i]
+    if ( p ==='('){
+      arr.push(i)
+    }
+    else if (p === ')'){
+      let begin = arr.pop()
+      let invest = [...packages.slice(begin,i+1)].reverse().join('')
+      packages = packages.slice(0,begin) +invest+ packages.slice(i+1)
+    }
+  }
+
+  return packages.replaceAll('(','').replaceAll(')','')
+}
+```
+
+```js
+// 4 estrellas :////
+function fixPackages(packages) {
+  let arr = []
+  let packages_arr = [...packages]
+  for(let i = 0; i<packages_arr.length ;i++){
+    let p = packages_arr[i]
+    if ( p ==='('){
+      arr.push(i)
+    }
+    else if (p === ')'){
+      let begin = arr.pop()
+      let invest = packages_arr.slice(begin+1,i).reverse()
+      packages_arr = packages_arr.slice(0,begin).concat(invest,packages_arr.slice(i+1))
+      i = i-2
+    }
+  }
+
+  return packages_arr.join('')
+}
+```
+
+```js
+// 4 estrellas ://///////
+function fixPackages(packages) {
+  let arr = []
+  let packages_arr = [...packages]
+  for(let i = 0; i<packages_arr.length ;i++){
+    let p = packages_arr[i]
+    if ( p ==='('){
+      arr.push(i)
+    }
+    else if (p === ')'){
+      let begin = arr.pop()
+      let invest = packages_arr.slice(begin,i).reverse()
+      packages_arr.splice(begin, i - begin , ...invest)
+    }
+  }
+
+  return packages_arr.join('').replace(/[()]/g, '')
+}
+```

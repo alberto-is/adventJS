@@ -585,11 +585,7 @@ drawRace([3, 7, -2], 12)
 ```
 
 ```js
-/**
- * @param {number[]} indices - The reno indices
- * @param {number} length - The length of the race
- * @returns {string} The reno race
- */
+// 5 estrellas
 function drawRace(indices, length) {
   let reply = []
   for (let r = 0; r < indices.length; r++){
@@ -608,5 +604,139 @@ function drawRace(indices, length) {
     reply[r] = ' '.repeat(indices.length-r-1)+reply[r]+` /${r+1}`
   }
   return reply.join("\n")
+}
+```
+
+## Día 9
+Los elfos están jugando con un tren 🚂 mágico que transporta regalos. Este tren se mueve en un tablero representado por un array de strings.
+
+El tren está compuesto por una locomotora (@), seguida de sus vagones (o), y debe recoger frutas mágicas (*) que le sirve de combustible. El movimiento del tren sigue las siguientes reglas:
+
+Recibirás dos parámetros board y mov.
+
+board es un array de strings que representa el tablero:
+
+@ es la locomotora del tren.
+o son los vagones del tren.
+* es una fruta mágica.
+· son espacios vacíos.
+mov es un string que indica el próximo movimiento del tren desde la cabeza del tren @:
+
+'L': izquierda
+'R': derecha
+'U': arriba
+'D': abajo.
+Con esta información, debes devolver una cadena de texto:
+
+'crash': Si el tren choca contra los bordes del tablero o contra sí mismo.
+'eat': Si el tren recoge una fruta mágica (*).
+'none': Si avanza sin chocar ni recoger ninguna fruta mágica.
+
+```js
+const board = ['·····', '*····', '@····', 'o····', 'o····']
+
+console.log(moveTrain(board, 'U'))
+// ➞ 'eat'
+// Porque el tren se mueve hacia arriba y encuentra una fruta mágica
+
+console.log(moveTrain(board, 'D'))
+// ➞ 'crash'
+// El tren se mueve hacia abajo y la cabeza se choca consigo mismo
+
+console.log(moveTrain(board, 'L'))
+// ➞ 'crash'
+// El tren se mueve a la izquierda y se choca contra la pared
+
+console.log(moveTrain(board, 'R'))
+// ➞ 'none'
+// El tren se mueve hacia derecha y hay un espacio vacío en la derecha
+```
+
+```js
+// 1 estrella :C
+function moveTrain(board, mov) {
+  let engine = -1
+    for(let i = 0; i < board.length; i++){
+      if (board[i].includes('@')){
+        engine = i
+        break
+      }
+    }
+  if(engine === -1){
+    return NaN
+  }
+  let pos = board[engine].indexOf('@')
+    switch(mov){
+      case 'D':
+        if(engine+1 >= board.length || board[engine+1][pos]=='o'){
+          return 'crash'
+        }
+        else if(board[engine+1][pos]=='*'){
+          return 'eat'
+        }
+        return 'none'
+
+      case 'U':
+        if(engine-1<0 || board[engine-1][pos]=='o'){
+          return 'crash'
+        }
+        else if(board[engine-1][pos]=='*'){
+          return 'eat'
+        }
+        return 'none'
+
+      case 'L':
+        if(pos-1<0 || board[engine][pos-1]=='o'){
+          return 'crash'
+        }
+        else if(board[engine][pos-1]=='*'){
+          return 'eat'
+        }
+        return 'none'
+
+      case 'R':
+        if(pos+1>=board[engine].length || board[engine][pos+1]=='o'){
+          return 'crash'
+        }
+        else if(board[engine][pos+1]=='*'){
+          return 'eat'
+        }
+        return 'none'
+
+      
+    }
+  return 'none';
+}
+```
+
+```js
+// 3 estrellas :////
+function moveTrain(board, mov) {
+  let engine = -1, pos = -1
+    for(let i = 0; i < board.length; i++){
+      let col = board[i].indexOf('@')
+      if (col !== -1){
+        engine = i
+        pos = col
+        break
+      }
+    }
+    const moves = { 
+    'U': [-1,  0], 
+    'D': [ 1,  0], 
+    'L': [ 0, -1], 
+    'R': [ 0,  1] 
+    };
+
+    const newRow = engine + moves[mov][0];
+    const newCol = pos + moves[mov][1];
+  
+    if (newRow < 0 || newRow >= board.length || newCol < 0 || newCol >= board[0].length) {
+      return 'crash';
+    }
+    
+    if (board[newRow][newCol] === 'o') return 'crash';
+    if (board[newRow][newCol] === '*') return 'eat';
+    return 'none';
 }
 ```

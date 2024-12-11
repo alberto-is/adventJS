@@ -520,6 +520,7 @@ function fixPackages(packages) {
 }
 ```
 
+
 ```js
 // 4 estrellas ://///////
 function fixPackages(packages) {
@@ -541,6 +542,23 @@ function fixPackages(packages) {
 }
 ```
 
+```js 
+// 5 estrellas :D
+function fixPackages(packages) {
+  let regex = /\([a-z]+\)/g
+  let loop = true
+
+  while(loop){
+    loop = false
+    packages = packages.replace(regex,frame => {
+        loop= true
+        return frame.slice(1, -1).split('').reverse().join('')
+    })
+  }
+
+    return packages
+}
+```
 ## Día 8
 ¡Es hora de seleccionar a los renos más rápidos para los viajes de Santa! 🦌🎄
 Santa Claus ha organizado unas emocionantes carreras de renos para decidir cuáles están en mejor forma.

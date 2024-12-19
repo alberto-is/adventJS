@@ -1245,24 +1245,76 @@ drawTable([
 
 
 ```js
+// 4 extrellas
 function drawTable(data) {
+  const keys = Object.keys(data[0])
+  const headers = keys.map(key => key.charAt(0).toUpperCase() + key.slice(1))
   
-  let [key1, key2] = Object.keys(data[0]);
-  let max_length1 = Math.max(key1.length, ...data.map(person => person[key1].length));
-  let max_length2 = Math.max(key2.length, ...data.map(person => person[key2].length));
+  const maxLengths = keys.map(key => {
+    return Math.max(
+      key.length,
+      ...data.map(row => String(row[key]).length)
+    )
+  })
 
-  let tb = `+` + `-`.repeat(max_length1 + 2) + `+` + `-`.repeat(max_length2 + 2) + `+`;
-  let header = `| ${key1}` + ' '.repeat(max_length1 - key1.length + 1) +
-               `| ${key2}` + ' '.repeat(max_length2 - key2.length + 1) + `|\n`;
+  const border = '+' + maxLengths.map(len => '-'.repeat(len + 2)).join('+') + '+'
+  
+  const headerRow = '|' + headers.map((header, i) => 
+    ` ${header}${' '.repeat(maxLengths[i] - header.length)} `
+  ).join('|') + '|'
+  
+  const rows = data.map(row =>
+    '|' + keys.map((key, i) => 
+      ` ${row[key]}${' '.repeat(maxLengths[i] - String(row[key]).length)} `
+    ).join('|') + '|'
+  )
+  
+  return [
+    border,
+    headerRow, 
+    border,
+    ...rows,
+    border
+  ].join('\n')
+}
+```
 
-  let rows = data.map(person => {
-    let first = person[key1];
-    let second = person[key2];
-    
-    return `| ${first}` + ' '.repeat(max_length1 - first.length + 1) +
-           `| ${second}` + ' '.repeat(max_length2 - second.length + 1) + `|`;
-  }).join('\n');
+## Día 16
 
-  return tb +'\n'+ header + tb +'\n'+ rows + '\n' + tb;
+Los elfos están trabajando arduamente para limpiar los caminos llenos de nieve mágica ❄️. Esta nieve tiene una propiedad especial: si dos montículos de nieve idénticos y adyacentes se encuentran, desaparecen automáticamente.
+
+Tu tarea es escribir una función que ayude a los elfos a simular este proceso. El camino se representa por una cadena de texto y cada montículo de nieve un carácter.
+
+Tienes que eliminar todos los montículos de nieve adyacentes que sean iguales hasta que no queden más movimientos posibles.
+
+El resultado debe ser el camino final después de haber eliminado todos los montículos duplicados:
+
+```javascript
+removeSnow('zxxzoz') // -> "oz"
+// 1. Eliminamos "xx", quedando "zzoz"
+// 2. Eliminamos "zz", quedando "oz"
+
+removeSnow('abcdd') // -> "abc"
+// 1. Eliminamos "dd", quedando "abc"
+
+removeSnow('zzz') // -> "z"
+// 1. Eliminamos "zz", quedando "z"
+
+removeSnow('a') // -> "a"
+// No hay montículos repetidos
+```
+
+```js
+// 5 estrellas
+function removeSnow(s) {
+  let response = [...s]
+
+  for (let i = 1; i< response.length;i++){
+    if (response[i-1] === response[i]){
+      response.splice(i-1,2)
+      i = i - 2
+    }
+  }
+  return response.join('');
 }
 ```
